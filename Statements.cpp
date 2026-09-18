@@ -41,3 +41,19 @@ void AssignmentStatement::print() const {
     expression->print();
     std::cout << '\n';
 }
+
+PrintStatement::PrintStatement(ExprNode *expression) : expression{expression} {}
+
+PrintStatement::~PrintStatement() {
+    delete expression;
+}
+
+void PrintStatement::evaluate(SymbolTable &symbolTable) const {
+    std::cout << expression->evaluate(symbolTable) << '\n';
+}
+
+void PrintStatement::print() const {
+    std::cout << "print ";
+    expression->print();
+    std::cout << '\n';
+}

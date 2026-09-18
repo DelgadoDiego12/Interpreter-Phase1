@@ -67,8 +67,11 @@ Statement *Parser::statement() {
     }
     if (token.isForKeyword())
         die("Parser::statement", "for-statements are not implemented in the base interpreter", token);
-    if (token.isPrintKeyword())
-        die("Parser::statement", "print-statements are not implemented in the base interpreter", token);
+
+    if (token.isPrintKeyword()) {
+        tokenizer.ungetToken();
+        return printStatement();
+    }
 
     die("Parser::statement", "expected a statement", token);
 }
@@ -88,20 +91,50 @@ AssignmentStatement *Parser::assignmentStatement() {
     return new AssignmentStatement(variable.identifier(), relExpr());
 }
 
+PrintStatement *Parser::printStatement() {
+    // <print-statement> -> print <rel-expr>
+    Token printToken = tokenizer.getToken();
+    if (!printToken.isPrintKeyword()) {
+        die ("Parser::printStatement", "expected 'print'", printToken);
+    }
+    return new PrintStatement(relExpr());
+}
+
 ExprNode *Parser::relExpr() {
     // <rel-expr> -> <rel-term> [ <equality-op> <rel-term> ]
     // The optional equality operation is left for students to implement.
-    return relTerm();
+    ExprNode *left = relTerm();
+    Token token = tokenizer.getToken();
+
+    while (token.isEqualityOp) {
+        ExprNode *right = relTerm();
+        left = new BinaryExprNode(token, left, right);
+        token = tokenizer.getToken();
+    }
+    tokenizer.ungetToken();
+
+    return left;
 }
 
 ExprNode *Parser::relTerm() {
     // <rel-term> -> <rel-primary> [ <ordering-op> <rel-primary> ]
     // The optional ordering operation is left for students to implement.
-    return relPrimary();
+    ExprNode *left = relPrimary();
+    Token token = tokenizer.getToken();
+
+    while (token.isOrderingOp) {
+        ExprNode *right = relPrimary();
+        left = new BinaryExprNode(token, left, right);
+        token = tokenizer.getToken();
+    }
+
+    tokenizer.ungetToken();
+    return left;
 }
 
 ExprNode *Parser::relPrimary() {
     // <rel-primary> -> <arith-expr>
+
     return arithExpr();
 }
 

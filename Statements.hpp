@@ -41,4 +41,16 @@ private:
     ExprNode *expression;
 };
 
+class PrintStatement final : public Statement {
+public:
+    PrintStatement(ExprNode *expression);
+    ~PrintStatement() override;
+
+    void evaluate(SymbolTable &symbolTable) const override;
+    void print() const override;
+
+private:
+    ExprNode *expression;
+};
+
 #endif // EXPRINTER_STATEMENTS_HPP

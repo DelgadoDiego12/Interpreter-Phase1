@@ -16,6 +16,7 @@ public:
     Statements *statements();
     Statement *statement();
     AssignmentStatement *assignmentStatement();
+    PrintStatement *printStatement();
 
     ExprNode *relExpr();
     ExprNode *relTerm();
