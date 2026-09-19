@@ -116,14 +116,34 @@ Token Tokenizer::getToken() {
     } else {
         char character;
         getCharacter(character);
+        char nextChar = static_cast<char>(inputStream.peek()); //peek at the next character
 
         if (isDigit(character)) {
             token.setIntegerValue(readInteger(character));
-        } else if (character == '=' || character == '+' || character == '-' ||
+        } 
+        //my addition
+        else if ((character == '=' || character == '!' || character == '<' || character == '>') && (nextChar == '=')){
+            getCharacter(nextChar); 
+            std::string twoChar = ""; //so I can convert to string
+            twoChar = character;
+            twoChar += nextChar;
+            token.setSymbol(twoChar);
+            //token.setSymbol(character);
+            
+        }
+        else if (character == '=' || character == '+' || character == '-' ||
                    character == '*' || character == '/' || character == '%' ||
-                   character == ';' || character == '(' || character == ')') {
-            token.setSymbol(character);
-        } else if (isIdentifierStart(character)) {
+                   character == ';' || character == '(' || character == ')' ||
+                   //my addition
+                   character == '>' || character == '<' || character == '{' || 
+                   character == '}'){
+            std::string oneChar = "";
+            oneChar = character;
+            //oneChar += character;
+            token.setSymbol(oneChar);
+            //token.setSymbol(character); //needs to be string instead of char
+        } 
+        else if (isIdentifierStart(character)) {
             std::string identifier = readIdentifier(character);
             if (identifier == "for")
                 token.setKeyword(Keyword::forKeyword);
@@ -131,7 +151,8 @@ Token Tokenizer::getToken() {
                 token.setKeyword(Keyword::printKeyword);
             else
                 token.setIdentifier(std::move(identifier));
-        } else {
+        } 
+        else {
             std::cerr << "Unknown character in input at line " << token.lineNumber()
                       << ", column " << token.columnNumber() << ": '"
                       << character << "'.\n";
