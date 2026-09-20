@@ -106,13 +106,13 @@ ExprNode *Parser::relExpr() {
     ExprNode *left = relTerm();
     Token token = tokenizer.getToken();
 
-    while (token.isEqualityOp) {
+    if (token.isEqualToOperator() || token.isNotEqualToOperator()) {
         ExprNode *right = relTerm();
         left = new BinaryExprNode(token, left, right);
-        token = tokenizer.getToken();
-    }
-    tokenizer.ungetToken();
+    }  else {
+        tokenizer.ungetToken();
 
+    }
     return left;
 }
 
@@ -122,13 +122,16 @@ ExprNode *Parser::relTerm() {
     ExprNode *left = relPrimary();
     Token token = tokenizer.getToken();
 
-    while (token.isOrderingOp) {
+    if (token.isGreaterThanOperator() ||
+        token.isLessThanOperator() ||
+        token.isGreaterOrEqualToOperator()||
+        token.isLessOrEqualToOperator()) {
+
         ExprNode *right = relPrimary();
         left = new BinaryExprNode(token, left, right);
-        token = tokenizer.getToken();
-    }
-
-    tokenizer.ungetToken();
+        } else {
+            tokenizer.ungetToken();
+        }
     return left;
 }
 
