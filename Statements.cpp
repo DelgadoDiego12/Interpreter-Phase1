@@ -42,6 +42,11 @@ void AssignmentStatement::print() const {
     std::cout << '\n';
 }
 
+void AssignmentStatement::otherPrint() const {
+    std::cout << variableName << " = ";
+    expression->print();    
+}
+
 PrintStatement::PrintStatement(ExprNode *expression) : expression{expression} {}
 
 PrintStatement::~PrintStatement() {
@@ -56,4 +61,34 @@ void PrintStatement::print() const {
     std::cout << "print ";
     expression->print();
     std::cout << '\n';
+}
+
+ForStatement::ForStatement(AssignmentStatement *initialization, ExprNode *condition, AssignmentStatement *assignment, Statements *loopBody) 
+    : initialization{initialization}, condition{condition}, assignment{assignment}, loopBody{loopBody} {}
+
+ForStatement::~ForStatement() {
+    delete initialization;
+    delete condition;
+    delete assignment;
+    delete loopBody;
+}
+
+void ForStatement::evaluate(SymbolTable &symbolTable) const {
+    initialization->evaluate(symbolTable); //initialization assignment statement gets evaluated once
+    while (condition->evaluate(symbolTable) !=0 ) { // while condition doesn't equal zero
+        loopBody->evaluate(symbolTable); // evaluate statements
+        assignment->evaluate(symbolTable); //updates the assignment statement
+    }
+}
+
+void ForStatement::print() const {
+    std::cout << "for (";
+    initialization->otherPrint();
+    std::cout << " ; ";
+    condition->print();
+    std::cout << " ; ";
+    assignment->otherPrint();
+    std::cout << ") { \n";
+    loopBody->print();
+    std::cout << " }\n";
 }

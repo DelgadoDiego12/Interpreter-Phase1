@@ -35,6 +35,7 @@ public:
 
     void evaluate(SymbolTable &symbolTable) const override;
     void print() const override;
+    void otherPrint() const; //same as print but with no newline
 
 private:
     std::string variableName;
@@ -51,6 +52,20 @@ public:
 
 private:
     ExprNode *expression;
+};
+
+class ForStatement final : public Statement {
+public:
+    ForStatement(AssignmentStatement *initialization, ExprNode *condition, AssignmentStatement *assignment, Statements *loopBody);
+    ~ForStatement() override;
+    void evaluate(SymbolTable &symbolTable) const override;
+    void print() const override;
+private:
+    AssignmentStatement *initialization;
+    ExprNode *condition;
+    AssignmentStatement *assignment;
+    Statements *loopBody;
+
 };
 
 #endif // EXPRINTER_STATEMENTS_HPP
