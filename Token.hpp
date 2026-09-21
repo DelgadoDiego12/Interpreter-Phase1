@@ -39,7 +39,6 @@ public:
     [[nodiscard]] bool isModuloOperator() const { return _symbol == "%"; }
     [[nodiscard]] bool isDivisionOperator() const { return _symbol == "/"; }
 
-    //my additions
     [[nodiscard]] bool isLessThanOperator() const { return _symbol == "<"; }
     [[nodiscard]] bool isGreaterThanOperator() const { return _symbol == ">"; }
     [[nodiscard]] bool isOpenCurlyBrace() const { return _symbol == "{"; }

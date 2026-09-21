@@ -121,27 +121,21 @@ Token Tokenizer::getToken() {
         if (isDigit(character)) {
             token.setIntegerValue(readInteger(character));
         } 
-        //my addition
         else if ((character == '=' || character == '!' || character == '<' || character == '>') && (nextChar == '=')){
             getCharacter(nextChar); 
-            std::string twoChar = ""; //so I can convert to string
+            std::string twoChar = ""; //creating string for 2 character operators
             twoChar = character;
-            twoChar += nextChar;
+            twoChar += nextChar; 
             token.setSymbol(twoChar);
-            //token.setSymbol(character);
-            
         }
         else if (character == '=' || character == '+' || character == '-' ||
                    character == '*' || character == '/' || character == '%' ||
                    character == ';' || character == '(' || character == ')' ||
-                   //my addition
                    character == '>' || character == '<' || character == '{' || 
                    character == '}'){
             std::string oneChar = "";
-            oneChar = character;
-            //oneChar += character;
+            oneChar = character; //to convert char to string
             token.setSymbol(oneChar);
-            //token.setSymbol(character); //needs to be string instead of char
         } 
         else if (isIdentifierStart(character)) {
             std::string identifier = readIdentifier(character);
