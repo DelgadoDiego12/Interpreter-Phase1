@@ -65,9 +65,10 @@ Statement *Parser::statement() {
         tokenizer.ungetToken();
         return assignmentStatement();
     }
-    if (token.isForKeyword())
-        die("Parser::statement", "for-statements are not implemented in the base interpreter", token);
-
+    if (token.isForKeyword()) {
+        tokenizer.ungetToken();
+        return forStatement();
+    }
     if (token.isPrintKeyword()) {
         tokenizer.ungetToken();
         return printStatement();
@@ -98,6 +99,45 @@ PrintStatement *Parser::printStatement() {
         die ("Parser::printStatement", "expected 'print'", printToken);
     }
     return new PrintStatement(relExpr());
+}
+
+ForStatement *Parser::forStatement() {
+    // <for-statement> -> for ( <assignment-statement> ; <real-expr> ; <assignment-statement> ) { NEWLINE <statements> }
+    Token forToken = tokenizer.getToken();
+    if (!forToken.isForKeyword()) {
+        die ("Parser::forStatement", "expected 'for'", forToken);
+    }
+    Token openParenToken = tokenizer.getToken();
+    if (!openParenToken.isOpenParen()){
+        die ("Parser::forStatement", "expected ' ( '", openParenToken);
+    }
+    // <assignment-statement> the initialization statement
+    Token semicolonToken = tokenizer.getToken();
+    if (!semicolonToken.isSemicolon()) {
+        die ("Parser::forStatement", "expected ' ; '", semicolonToken);
+    }
+    //<real-expr> the relational condition that continues while it evaluates to nonzero value, reevaluate for every iteration
+    //under a loop while condition != 0?
+    Token semicolonToken = tokenizer.getToken();
+    if (!semicolonToken.isSemicolon()) {
+        die ("Parser::forStatement", "expected ' ; '", semicolonToken);
+
+    }
+    //<assignment-statement> update after every iteration
+    Token closeParenToken = tokenizer.getToken();
+    if (!closeParenToken.isCloseParen()) {
+        die ("Parser::forStatement", "expected ' ) '", closeParenToken);
+    }
+    Token openCurBraceToken = tokenizer.getToken();
+    if (!openCurBraceToken.isOpenCurlyBrace()){
+        die ("Parser::forStatement", "expected ' { '", openCurBraceToken);
+    }
+    //NEWLINE <statements>
+    Token closeCurBraceToken = tokenizer.getToken();
+    if (!closeCurBraceToken.isCloseCurlyBrace()) {
+        die ("Parser::forStatement", "expected ' } '", closeCurBraceToken);
+    }
+    //return new ForStatement(something in here);
 }
 
 ExprNode *Parser::relExpr() {
