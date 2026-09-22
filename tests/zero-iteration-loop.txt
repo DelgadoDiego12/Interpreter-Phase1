@@ -1,0 +1,5 @@
+value = 27
+for (i = 5; i < 5; i = i + 1) {
+    value = 999
+}
+print value

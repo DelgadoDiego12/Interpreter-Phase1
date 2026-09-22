@@ -1,0 +1,7 @@
+n = 29
+isPrime = n >= 2
+for (divisor = 2; divisor * divisor <= n; divisor = divisor + 1) {
+    remainder = n % divisor
+    isPrime = isPrime * (remainder != 0)
+}
+print isPrime

@@ -1,0 +1,8 @@
+a = 1071
+b = 462
+for (iteration = 0; b != 0; iteration = iteration + 1) {
+    remainder = a % b
+    a = b
+    b = remainder
+}
+print a
