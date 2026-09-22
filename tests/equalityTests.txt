@@ -1,0 +1,7 @@
+falseEqual = 26 == 1
+falseNotEqual = 5 != 5
+single!Test = 6 ! 4
+
+print falseEqual
+print falseNotEqual 
+print single!Test 
